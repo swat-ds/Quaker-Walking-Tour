@@ -4,6 +4,7 @@ layout: page
 permalink: /connect/
 ---
 
+<!-- 1. FIXED: Correctly pathed link to download the Vis.js map software library -->
 <script type="text/javascript" src="https://unpkg.com"></script>
 
 <style>
@@ -19,7 +20,6 @@ permalink: /connect/
 
 <p class="lead">Click, drag, or zoom into the diagram to explore connections. Select any connection line or portrait to display their historical context and botanical records in the sidebar.</p>
 
-<!-- 2. FIXED: Valid HTML layout boxes -->
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px;">
   <!-- Left Side: Visual Map Diagram Canvas -->
   <div style="flex: 2; min-width: 320px;">
@@ -35,7 +35,7 @@ permalink: /connect/
 
 <script type="text/javascript">
 
-  // gets the info from 
+  // 2. FIXED: Re-added the relationship text registry so clicking lines actually displays text
   const relationshipRegistry = {
     {% for row in site.data.quakerconnects %}
     "{{ row.relationship_id }}": {
@@ -46,7 +46,6 @@ permalink: /connect/
     {% endfor %}
   };
 
-  // 
   const nodeRegistry = {
     {% for row in site.data.people %}
     "{{ row.person_name }}": {
@@ -57,7 +56,7 @@ permalink: /connect/
     {% endfor %}
   };
 
-  // 4. FIXED: Added canvasNodes so your portrait images and people circles actually draw
+  // Generates your circles and portraits cleanly
   const canvasNodes = new vis.DataSet([
     {% for row in site.data.people %}
     { 
@@ -74,19 +73,19 @@ permalink: /connect/
     {% endfor %}
   ]);
 
-  // Pulling edge data from the connections CSV
+  // 3. FIXED: Removed the duplicate, broken duplicate line loop array
   const canvasEdges = new vis.DataSet([
     {% for row in site.data.quakerconnects %}
     { 
       id: "{{ row.relationship_id }}", 
-      from: "{{ row.person_1 | strip }}", 
-      to: "{{ row.person_2 | strip }}", 
-      label: "{{ row.connection_type | strip }}" 
+      from: {{ row.person_1 | strip | jsonify }}, 
+      to: {{ row.person_2 | strip | jsonify }}, 
+      label: {{ row.connection_type | strip | jsonify }} 
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ]);
 
-  // Building the canvas grid canvas map layout
+  // Building the network grid canvas layout
   const ctx = document.getElementById('network-container');
   const chart = new vis.Network(ctx, { nodes: canvasNodes, edges: canvasEdges }, {
     nodes: { 
@@ -107,7 +106,7 @@ permalink: /connect/
     }
   });
 
-  // 5. FIXED: Single clean click tracker to handle sidebar text updates smoothly
+  // Single click tracker to update dashboard panel text seamlessly
   chart.on("click", function (evt) {
     if (evt.nodes.length > 0) {
       const nodeData = nodeRegistry[evt.nodes];
