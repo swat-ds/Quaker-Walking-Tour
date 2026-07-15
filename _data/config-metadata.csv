@@ -7,9 +7,8 @@ subject,Subjects,true,,DCTERMS.subject,keywords
 location,Location,,,,contentLocation
 latitude,Latitude,,,,
 longitude,Longitude,,,,
+memeber of,Member of,,,,
 source,Source,,,,
+image description,Image Description,,,,
 identifier,Source Identifier,,,,
-type,Type,,,DCTERMS.type,
-format,Format,,,,encodingFormat
-language,Language,,,DCTERMS.language,
 rightsstatement,,,,DCTERMS.rights,license
