@@ -19,7 +19,7 @@ permalink: /connect/
   .vis-network { cursor: pointer; }
 </style>
 
-<p class="lead">This graph showcases the different ways the Quakers in this collection connect to each other. From friends, to brothers, to biographers. Click, drag, or zoom into the diagram to explore each different connection and their history. Select any connection line or portrait to display their historical context and botanical records in the sidebar.</p>
+<p class="lead">This graph showcases the different ways the Quakers in this collection connect to each other. From friends, to brothers, to biographers. Click, drag, or zoom into the diagram to explore each different relationships and their history. Select any connection line or portrait to display their historical context and botanical records in the sidebar.</p>
 
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px;">
   <!-- Map -->
@@ -74,7 +74,7 @@ permalink: /connect/
     {% endfor %}
   ]);
 
-  // 3. FIXED: Removed the duplicate, broken duplicate line loop array
+  // 
   const canvasEdges = new vis.DataSet([
     {% for row in site.data.quakerconnects %}
     { 
