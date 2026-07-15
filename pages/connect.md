@@ -4,8 +4,9 @@ layout: page
 permalink: /connect/
 ---
 
-<!-- 1. FIXED: Correctly pathed link to download the Vis.js map software library -->
-<script type="text/javascript" src="https://unpkg.com"></script>
+<!-- Linking Vis.js map software library -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/10.1.0/standalone/umd/vis-network.min.js"></script>
+
 
 <style>
   #network-container {
@@ -18,14 +19,14 @@ permalink: /connect/
   .vis-network { cursor: pointer; }
 </style>
 
-<p class="lead">Click, drag, or zoom into the diagram to explore connections. Select any connection line or portrait to display their historical context and botanical records in the sidebar.</p>
+<p class="lead">This graph showcases the different ways the Quakers in this collection connect to each other. From friends, to brothers, to biographers. Click, drag, or zoom into the diagram to explore each different connection and their history. Select any connection line or portrait to display their historical context and botanical records in the sidebar.</p>
 
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px;">
-  <!-- Left Side: Visual Map Diagram Canvas -->
+  <!-- Map -->
   <div style="flex: 2; min-width: 320px;">
     <div id="network-container"></div>
   </div>
-  <!-- Right Side: Sidebar Panel -->
+  <!-- Sidebar Panel -->
   <div style="flex: 1; min-width: 260px; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; background: #ffffff; height: fit-content; max-height: 550px; overflow-y: auto;">
     <h3 id="panel-title" style="margin-top:0;">Select an Item</h3>
     <h6 id="panel-sub" style="color: #1e88e5; margin-bottom: 15px; font-weight: normal; text-transform: uppercase; font-size: 0.8rem;"></h6>
@@ -35,7 +36,7 @@ permalink: /connect/
 
 <script type="text/javascript">
 
-  // 2. FIXED: Re-added the relationship text registry so clicking lines actually displays text
+  // Relationship registry
   const relationshipRegistry = {
     {% for row in site.data.quakerconnects %}
     "{{ row.relationship_id }}": {
