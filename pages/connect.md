@@ -1,7 +1,7 @@
 ---
 title: Quaker Connections
 layout: page
-permalink: /relationship-map/
+permalink: /connect/
 ---
 
 <script type="text/javascript" src="https://unpkg.com"></script>
