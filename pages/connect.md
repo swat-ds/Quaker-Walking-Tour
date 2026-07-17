@@ -128,11 +128,11 @@ permalink: /connect/
     }
   });
 
-  // Click and get information
+  // Click handler managing image, source and connection state resets safely
   chart.on("click", function (evt) {
-    // Check nodes first
+    // Check if a portrait node was clicked
     if (evt.nodes && evt.nodes.length > 0) {
-      const selectedNodeId = evt.nodes[0]; // Get the specific node ID string
+      const selectedNodeId = evt.nodes[0]; 
       const nodeData = nodeRegistry[selectedNodeId];
       
       if (nodeData) {
@@ -140,7 +140,7 @@ permalink: /connect/
         document.getElementById('panel-sub').innerText = nodeData.sub;
         document.getElementById('panel-desc').innerText = nodeData.desc;
 
-        // Adding the images into the side pannel
+        // Image Pop-up Display state mapping
         if (nodeData.has_image) {
           document.getElementById('panel-img').src = nodeData.image;
           document.getElementById('panel-imag-desc').innerText = nodeData.imag_desc || "";
@@ -149,7 +149,7 @@ permalink: /connect/
           document.getElementById('panel-img-container').style.display = "none";
         }
 
-        // Adding image description and date 
+        // Source Info Box Layout state mapping
         if (nodeData.source_info || nodeData.imag_date) {
           document.getElementById('panel-imag-date').innerText = nodeData.imag_date || "Unknown";
           document.getElementById('panel-source-info').innerText = nodeData.source_info || "No source provided.";
@@ -159,15 +159,25 @@ permalink: /connect/
         }
       }
     } 
-    // If no node was clicked, check if an edge was clicked
+    // A relationship connection line was clicked 
     else if (evt.edges && evt.edges.length > 0) {
-      const selectedEdgeId = evt.edges[0]; // Get the specific edge ID string
+      const selectedEdgeId = evt.edges[0]; // string key index
       const edgeData = relationshipRegistry[selectedEdgeId];
       
       if (edgeData) {
         document.getElementById('panel-title').innerText = edgeData.title;
         document.getElementById('panel-sub').innerText = edgeData.sub;
         document.getElementById('panel-desc').innerText = edgeData.desc;
+        
+        // hide the portrait components when switching views
+        document.getElementById('panel-img-container').style.display = "none";
+        document.getElementById('panel-source-container').style.display = "none";
+        
+        // Flush out old image element cache paths entirely
+        document.getElementById('panel-img').src = "";
+        document.getElementById('panel-imag-desc').innerText = "";
+        document.getElementById('panel-imag-date').innerText = "";
+        document.getElementById('panel-source-info').innerText = "";
       }
     }
   });
