@@ -29,7 +29,7 @@ permalink: /connect/
   <!-- Sidebar Panel -->
   <div style="flex: 1; min-width: 260px; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; background: #ffffff; height: fit-content; max-height: 550px; overflow-y: auto;">
     <h3 id="panel-title" style="margin-top:0;">Select an Item</h3>
-    <h6 id="panel-sub" style="color: #1e88e5; margin-bottom: 15px; font-weight: normal; text-transform: uppercase; font-size: 0.8rem;"></h6>
+    <h6 id="panel-sub" style="color: #e51e1e; margin-bottom: 15px; font-weight: normal; text-transform: uppercase; font-size: 0.8rem;"></h6>
     <p id="panel-desc">Click on a person, institution, or relationship line in the web to view historical narratives, family connections, and plant ties.</p>
   </div>
 </div>
@@ -51,13 +51,16 @@ permalink: /connect/
     {% for row in site.data.people %}
     "{{ row.person_name }}": {
       title: "{{ row.person_name }}",
-      sub: "Type: {{ row.group }}",
-      desc: "This historical entity is part of your botanical network map. Click on any of the connecting lines attached to them to read the full historical context."
+      sub: "Date of birth: {{ row.dob }}",
+      desc: "{{ row.description }}",
+      image: "{{ '/assets/img/' | relative_url }}{{ row.image }}",
+      imag_desc: "{{ row.imag_des}}",
+      imag_date: "{{ row.imag_date}}"
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   };
 
-  // Generates your circles and portraits cleanly
+  // Displays the pictures in circles 
   const canvasNodes = new vis.DataSet([
     {% for row in site.data.people %}
     { 
