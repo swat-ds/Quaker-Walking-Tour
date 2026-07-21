@@ -4,6 +4,29 @@
 */
 
  /* ----- Body background, text, and headings ----- */
+:root {
+    --bs-primary: #8e3333;
+    --bs-primary-rgb: 142, 51, 51;
+    --bs-link-color: #8e3333;
+    --bs-link-hover-color: #b54e4e;
+    --bs-link-color-rgb: 142, 51, 51;
+    --bs-link-hover-color-rgb: 181, 78, 78;
+    --bs-btn-focus-shadow-rgb: 142, 51, 51;
+}
+
+.pagination .page-link,
+.pagination .page-link:hover,
+.pagination .page-link:focus,
+.pagination .page-item.active .page-link {
+    color: #8e3333 !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #8e3333;
+    border-color: #8e3333;
+    color: #fff !important;
+}
+
 .btn-primary {
     --bs-btn-bg: #8e3333;
     --bs-btn-border-color: #8e3333;
@@ -26,4 +49,16 @@
 
 #scroll-to-top .icon-sprite {
     filter: brightness(0) saturate(100%) invert(23%) sepia(47%) saturate(1524%) hue-rotate(323deg) brightness(91%) contrast(94%) !important;
+}
+
+.marker-cluster,
+.marker-cluster-small {
+    background-color: rgba(201, 107, 107, 0.6) !important;
+    border-color: rgba(201, 107, 107, 0.8) !important;
+}
+
+.marker-cluster div,
+.marker-cluster-small div {
+    background-color: rgba(209, 79, 79, 0.8) !important;
+    color: #fff !important;
 }
