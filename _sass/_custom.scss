@@ -2,3 +2,28 @@
     Put your custom SCSS here! 
     This allows you to override any CollectionBuilder or Bootstrap CSS without modifying the base theme files directly.
 */
+
+ /* ----- Body background, text, and headings ----- */
+.btn-primary {
+    --bs-btn-bg: #8e3333;
+    --bs-btn-border-color: #8e3333;
+    --bs-btn-hover-bg: #b54e4e;
+    --bs-btn-hover-border-color: #7a2a2a;
+    --bs-btn-active-bg: #6a2424;
+    --bs-btn-active-border-color: #6a2424;
+    --bs-btn-disabled-bg: #8e3333;
+    --bs-btn-disabled-border-color: #8e3333;
+}
+
+.btn-success {
+    --bs-btn-bg: #8e3333;
+    --bs-btn-hover-bg: #b54e4e;
+}
+
+.col-md-12 {
+    display: none;
+}
+
+#scroll-to-top .icon-sprite {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(47%) saturate(1524%) hue-rotate(323deg) brightness(91%) contrast(94%) !important;
+}

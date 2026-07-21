@@ -84,8 +84,8 @@ metadata-facets-fields: "subject,creator,format"
 map-child-objects: true # true / false - if true, and if child item has latitude and longitude, child objects will be displayed on map
 timeline-child-objects: true # true / false - if true, and if child object has date, child objects will appear as thumbnails on timeline page
 data-child-objects: false # true / false - if true, child objects will appear linked in table on data page
-browse-child-objects: true # true / false - if true, child objects will appear on browse page and child objects' metadata will populate cloud pages like Subjects page and Locations page, as well as featured terms boxes on the home page
-search-child-objects: true # true / false - if true, child objects will appear on on search page along with parent objects
+browse-child-objects: false # true / false - if true, child objects will appear on browse page and child objects' metadata will populate cloud pages like Subjects page and Locations page, as well as featured terms boxes on the home page
+search-child-objects: false # true / false - if true, child objects will appear on on search page along with parent objects
 
 
 ##########
@@ -108,7 +108,7 @@ bootswatch: # leave blank or comment out for plain bootstrap
 # THEME FONTS [optional!]
 base-font-size: 1.2em
 text-color: "#191919"
-link-color: "#0d6efd"
+link-color: "#9E1B34"
 base-font-family: # comment out for bootstrap defaults. e.g. Roboto
 font-cdn: # add font stylesheet, e.g. <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 

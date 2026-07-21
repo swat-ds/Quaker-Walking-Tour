@@ -7,7 +7,7 @@ permalink: /connect/
 <!-- Linking Vis.js map software library -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/10.1.0/standalone/umd/vis-network.min.js"></script>
 
-
+// Creates the network container
 <style>
   #network-container {
     width: 100%;
@@ -26,12 +26,12 @@ permalink: /connect/
   <div style="flex: 2; min-width: 320px;">
     <div id="network-container"></div>
   </div>
-  <!-- Sidebar Panel -->
+  // Sidebar Panel
   <div style="flex: 1; min-width: 260px; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; background: #ffffff; height: fit-content; max-height: 550px; overflow-y: auto;">
     <h3 id="panel-title" style="margin-top:0;">Select an Item</h3>
     <h6 id="panel-sub" style="color: #e51e1e; margin-bottom: 15px; font-weight: normal; text-transform: uppercase; font-size: 0.8rem;"></h6>
 
-    <!-- Container for the Pop-up Portrait Image -->
+  // Container for the Pop-up Portrait
   <div id="panel-img-container" style="display: none; margin-bottom: 15px; text-align: center;">
     <img id="panel-img" src="" alt="Portrait Image" style="max-width: 100%; height: auto; border-radius: 4px; border: 1px solid #dee2e6; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
     <p id="panel-imag-desc" style="font-size: 0.85rem; color: #6c757d; margin-top: 5px; font-style: italic;"></p>
@@ -39,7 +39,7 @@ permalink: /connect/
 
   <p id="panel-desc">Click on a person, institution, or relationship line in the web to view historical narratives, family connections, and plant ties.</p>
 
-  <!-- Container for Source & Meta Information -->
+  // Container for Source & Meta Info
   <div id="panel-source-container" style="display: none; margin-top: 20px; padding-top: 15px; border-top: 1px dashed #dee2e6; font-size: 0.85rem; color: #495057;">
     <strong>Image Date:</strong> <span id="panel-imag-date"></span><br>
     <strong style="display:block; margin-top: 5px;">Collection & Source Info:</strong>
@@ -71,7 +71,7 @@ permalink: /connect/
       has_image: {% if row.image and row.image != "" %}true{% else %}false{% endif %},
       imag_desc: {{ row.imag_des | jsonify }},
       imag_date: {{ row.imag_date | jsonify }},
-      // Maps to column H: "Collection & Source info" from your spreadsheet
+      // Collection & Source info 
       source_info: {{ row['Collection & Source info'] | jsonify }}
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
@@ -119,12 +119,17 @@ permalink: /connect/
     edges: { 
       width: 2, 
       color: '#b0bec5', 
-      font: { size: 10, color: '#546e7a', align: 'horizontal' }, 
-      arrows: { to: false } 
+      font: { size: 10, color: '#000000', align: 'top', vadjust: -5 }, 
+      arrows: { to: false },
+      smooth: {
+        enabled: true,
+        type: 'continuous',
+        roundness: 0.3
+      }
     },
     groups: {
-      networked: { color: { background: '#e3f2fd', border: '#1e88e5' } },
-      institution: { color: { background: '#ede7f6', border: '#5e35b1' }, size: 32 }
+      networked: { color: { background: '#ffdada', border: '#e51e1e' } },
+      institution: { color: { background: '#ede7f6', border: '#b13535' }, size: 32 }
     }
   });
 
