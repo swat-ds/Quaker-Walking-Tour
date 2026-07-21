@@ -29,7 +29,8 @@ permalink: /connect/
   <!-- Sidebar Panel --> 
   <div style="flex: 1; min-width: 260px; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; background: #ffffff; height: fit-content; max-height: 550px; overflow-y: auto;">
     <h3 id="panel-title" style="margin-top:0;">Select an Item</h3>
-    <h6 id="panel-sub" style="color: #e51e1e; margin-bottom: 15px; font-weight: normal; text-transform: uppercase; font-size: 0.8rem;"></h6>
+    <h6 id="panel-sub" style="color: #e51e1e; margin-bottom: 10px; font-weight: normal; text-transform: uppercase; font-size: 0.8rem;"></h6>
+    <a id="panel-action-link" class="btn btn-light" href="#" style="display: none; margin-bottom: 15px;">View Item</a>
 
   <!-- Container for the Pop-up Portrait -->
   <div id="panel-img-container" style="display: none; margin-bottom: 15px; text-align: center;">
@@ -50,19 +51,20 @@ permalink: /connect/
 <script type="text/javascript">
 
 // Relationship registry
-  const relationshipRegistry = {
-    {% for row in site.data.quakerconnects %}
+const relationshipRegistry = {
+  {% for row in site.data.quakerconnects %}
     "{{ row.relationship_id }}": {
       title: "{{ row.person_1 }} & {{ row.person_2 }}",
       sub: "Connection: {{ row.connection_type }} | Plant: {{ row.associated_plant }}",
-      desc: {{ row.historical_context | jsonify }}
+      desc: {{ row.historical_context | jsonify }},
+      plant: {{ row.associated_plant | jsonify }}
     }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
-  };
+  {% endfor %}
+};
 
 // Get information for the people information
-  const nodeRegistry = {
-    {% for row in site.data.people %}
+const nodeRegistry = {
+  {% for row in site.data.people %}
     {{ row.person_name | strip | jsonify }}: {
       title: "{{ row.person_name }}",
       sub: "Date of birth: {{ row.dob }}",
@@ -74,41 +76,41 @@ permalink: /connect/
       // Collection & Source info 
       source_info: {{ row['Collection & Source info'] | jsonify }}
     }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
-  };
+  {% endfor %}
+};
 
 // Displays the image in a circle 
-  const canvasNodes = new vis.DataSet([
-    {% for row in site.data.people %}
+const canvasNodes = new vis.DataSet([
+  {% for row in site.data.people %}
     { 
       id: {{ row.person_name | strip | jsonify }}, 
       label: "{{ row.person_name }}", 
-      group: "{{ row.group }}",
+      group: "networked",
       {% if row.image and row.image != "" %}
       image: "{{ '/assets/img/' | relative_url }}{{ row.image }}",
       shape: "circularImage"
       {% else %}
-      shape: "{% if row.group == 'institution' %}square{% else %}dot{% endif %}"
+      shape: "dot"
       {% endif %}
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
-  ]);
+]);
 
 
   // Get information for the connections
-  const canvasEdges = new vis.DataSet([
-    {% for row in site.data.quakerconnects %}
+const canvasEdges = new vis.DataSet([
+  {% for row in site.data.quakerconnects %}
     { 
       id: "{{ row.relationship_id }}", 
       from: {{ row.person_1 | strip | jsonify }}, 
       to: {{ row.person_2 | strip | jsonify }}, 
       label: {{ row.connection_type | strip | jsonify }} 
     }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
-  ]);
+  {% endfor %}
+]);
 
   // Building the network grid canvas layout
-  const ctx = document.getElementById('network-container');
+const ctx = document.getElementById('network-container');
   const chart = new vis.Network(ctx, { nodes: canvasNodes, edges: canvasEdges }, {
     nodes: { 
       size: 28, 
@@ -128,22 +130,153 @@ permalink: /connect/
       }
     },
     groups: {
-      networked: { color: { background: '#ffdada', border: '#e51e1e' } },
-      institution: { color: { background: '#ede7f6', border: '#b13535' }, size: 32 }
+      networked: {
+        color: {
+          background: '#f2f4f7',
+          border: '#634b4b',
+          highlight: { background: '#eaf4ff', border: '#b32f2f' },
+          hover: { background: '#eaf4ff', border: '#b32f2f' },
+          selected: { background: '#eaf4ff', border: '#b32f2f' }
+        }
+      }
     }
   });
 
+  const plantItemRegistry = {
+    {% for row in site.data.quakerroots %}
+    {% assign plant_title = row.title | strip %}
+    {% if plant_title != "" %}
+    "{{ plant_title | downcase }}": "{{ '/items/' | relative_url }}{{ row.objectid }}.html",
+    {% endif %}
+    {% endfor %}
+  };
+
+  const defaultNodeColor = {
+    background: '#f2f4f7',
+    border: '#4b5563'
+  };
+  const selectedNodeColor = {
+    background: '#eaf4ff',
+    border: '#2f6fb3'
+  };
+  const defaultEdgeColor = { color: '#4b5563', highlight: '#4b5563', hover: '#4b5563' };
+  const selectedEdgeColor = { color: '#b32f2f', highlight: '#b32f2f', hover: '#b32f2f' };
+
+  let activeNodeId = null;
+  let activeEdgeId = null;
+  let highlightedEdgeIds = [];
+
+  function updateNodeStyle(nodeId, isSelected) {
+    if (!nodeId) return;
+    canvasNodes.update({
+      id: nodeId,
+      color: isSelected ? selectedNodeColor : defaultNodeColor
+    });
+  }
+
+  function updateEdgeStyle(edgeId, isSelected) {
+    if (!edgeId) return;
+    canvasEdges.update({
+      id: edgeId,
+      color: isSelected ? selectedEdgeColor : defaultEdgeColor,
+      width: isSelected ? 3 : 2
+    });
+  }
+
+  function clearSelection() {
+    if (activeNodeId) {
+      updateNodeStyle(activeNodeId, false);
+      activeNodeId = null;
+    }
+
+    if (activeEdgeId) {
+      updateEdgeStyle(activeEdgeId, false);
+      activeEdgeId = null;
+    }
+
+    // clear any previously highlighted connection lines
+    highlightedEdgeIds.forEach(function(edgeId) {
+      updateEdgeStyle(edgeId, false);
+    });
+    highlightedEdgeIds = [];
+
+    // clear vis.js internal selection state
+    chart.unselectAll();
+  }
+
+  function clearHighlightedEdges() {
+    highlightedEdgeIds.forEach(function(edgeId) {
+      updateEdgeStyle(edgeId, false);
+    });
+    highlightedEdgeIds = [];
+  }
+
+  function resetPanel() {
+    document.getElementById('panel-title').innerText = 'Select an Item';
+    document.getElementById('panel-sub').innerText = '';
+    document.getElementById('panel-desc').innerText = 'Click on a person, institution, or relationship line in the web to view historical narratives, family connections, and plant ties.';
+    document.getElementById('panel-img-container').style.display = 'none';
+    document.getElementById('panel-source-container').style.display = 'none';
+    document.getElementById('panel-img').src = '';
+    document.getElementById('panel-imag-desc').innerText = '';
+    document.getElementById('panel-imag-date').innerText = '';
+    document.getElementById('panel-source-info').innerText = '';
+    setActionLink(null);
+  }
+
+  // gets the link from the plant name to create the veiw items 
+  function setActionLink(plantName) {
+    const actionLink = document.getElementById('panel-action-link');
+    if (!plantName) {
+      actionLink.style.display = 'none';
+      actionLink.href = '#';
+      return;
+    }
+
+    const normalizedPlantName = plantName.toLowerCase().trim();
+    const exactMatch = plantItemRegistry[normalizedPlantName];
+    if (exactMatch) {
+      actionLink.href = exactMatch;
+      actionLink.style.display = 'inline-block';
+      actionLink.textContent = 'View Item';
+      return;
+    }
+
+    const fuzzyMatch = Object.keys(plantItemRegistry).find(function(key) {
+      return normalizedPlantName.includes(key) || key.includes(normalizedPlantName);
+    });
+
+    if (fuzzyMatch) {
+      actionLink.href = plantItemRegistry[fuzzyMatch];
+      actionLink.style.display = 'inline-block';
+      actionLink.textContent = 'View Item';
+    } else {
+      actionLink.style.display = 'none';
+      actionLink.href = '#';
+    }
+  }
+
   // Click handler managing image, source and connection state resets safely
   chart.on("click", function (evt) {
+    clearSelection();
+
+    if (!evt.nodes || evt.nodes.length === 0) {
+      if (!evt.edges || evt.edges.length === 0) {
+        resetPanel();
+        return;
+      }
+    }
+
     // Check if a portrait node was clicked
     if (evt.nodes && evt.nodes.length > 0) {
-      const selectedNodeId = evt.nodes[0]; 
+      const selectedNodeId = evt.nodes[0];
       const nodeData = nodeRegistry[selectedNodeId];
-      
+
       if (nodeData) {
         document.getElementById('panel-title').innerText = nodeData.title;
         document.getElementById('panel-sub').innerText = nodeData.sub;
         document.getElementById('panel-desc').innerText = nodeData.desc;
+        setActionLink(null);
 
         // Image Pop-up Display state mapping
         if (nodeData.has_image) {
@@ -163,26 +296,49 @@ permalink: /connect/
           document.getElementById('panel-source-container').style.display = "none";
         }
       }
-    } 
-    // A relationship connection line was clicked 
+
+      // clear any previous edge highlights
+      clearHighlightedEdges();
+
+      activeNodeId = selectedNodeId;
+      activeEdgeId = null;
+      updateNodeStyle(activeNodeId, true);
+
+      canvasEdges.forEach(function(edge) {
+        if (edge.from === activeNodeId || edge.to === activeNodeId) {
+          updateEdgeStyle(edge.id, true);
+          highlightedEdgeIds.push(edge.id);
+        }
+      });
+    }
+    // A relationship connection line was clicked
     else if (evt.edges && evt.edges.length > 0) {
-      const selectedEdgeId = evt.edges[0]; // string key index
+      const selectedEdgeId = evt.edges[0];
       const edgeData = relationshipRegistry[selectedEdgeId];
-      
+
       if (edgeData) {
         document.getElementById('panel-title').innerText = edgeData.title;
         document.getElementById('panel-sub').innerText = edgeData.sub;
         document.getElementById('panel-desc').innerText = edgeData.desc;
-        
+        setActionLink(edgeData.plant);
+
         // hide the portrait components when switching views
         document.getElementById('panel-img-container').style.display = "none";
         document.getElementById('panel-source-container').style.display = "none";
-        
+
         // Flush out old image element cache paths entirely
         document.getElementById('panel-img').src = "";
         document.getElementById('panel-imag-desc').innerText = "";
         document.getElementById('panel-imag-date').innerText = "";
         document.getElementById('panel-source-info').innerText = "";
       }
+
+      // clear any previous edge highlights
+      clearHighlightedEdges();
+
+      activeNodeId = null;
+      activeEdgeId = selectedEdgeId;
+      updateEdgeStyle(activeEdgeId, true);
+      highlightedEdgeIds.push(activeEdgeId);
     }
   });

@@ -21,10 +21,45 @@
     color: #8e3333 !important;
 }
 
+.btn-group.my-3,
+.btn-group.my-3 .btn {
+    color: #8e3333 !important;
+    border-color: #8e3333 !important;
+}
+
+.btn-group.my-3 .btn:hover,
+.btn-group.my-3 .btn:focus,
+.btn-group.my-3 .btn:active,
+.btn-group.my-3 .btn.active {
+    background-color: #8e3333 !important;
+    border-color: #8e3333 !important;
+    color: #fff !important;
+}
+
+.btn.btn-light {
+    color: #000000 !important;
+    border-color: #8e3333 !important;
+    background-color: #fff !important;
+}
+
+.btn.btn-light:hover,
+.btn.btn-light:focus,
+.btn.btn-light:active,
+.btn.btn-light.active {
+    background-color: #8e3333 !important;
+    border-color: #8e3333 !important;
+    color: #fff !important;
+}
+
 .pagination .page-item.active .page-link {
     background-color: #8e3333;
     border-color: #8e3333;
     color: #fff !important;
+}
+
+.btn .btn-outline-primary .dropdown-toggle {
+    color: #8e3333 !important;
+    border-color: #8e3333 !important;
 }
 
 .btn-primary {
