@@ -2,6 +2,7 @@
 # Default home page with boxes providing collection stats
 layout: page
 ---
+<!-- CollectionBuilder Main Content Grid -->
 <div class="row">
 
   <div class="col-md-8">
@@ -21,10 +22,159 @@ layout: page
     {% include index/content.html %}
 
   </div>
+
+</div>
+
+<!-- INTERACTIVE QUIZ SECTION -->
+<!-- Placed outside the row block to bypass CollectionBuilder style rules -->
+<div class="container my-5 py-4 border-top" style="position: relative; z-index: 10; display: block !important;">
+    <h2 class="mb-3 h3 text-dark">Swarthmore Quaker Campus Quiz</h2>
+    <p class="lead text-muted">Type in the name of Swarthmore buildings. How many are named after Quakers?</p>
+    
+    <!-- Input Box Area -->
+    <div class="input-group mb-4" style="max-width: 500px;">
+        <input type="text" id="bldgInput" class="form-control form-control-lg" placeholder="Type a building name (e.g., Parrish)..." autocomplete="off">
+        <button class="btn btn-primary px-4" onclick="checkBuilding()">Submit</button>
+    </div>
+
+    <!-- Live Scoreboards Grid -->
+    <div class="row text-center mb-4">
+        <div class="col-6 col-sm-4 mb-3">
+            <div class="card shadow-sm p-3 bg-light border">
+                <div class="text-secondary small text-uppercase font-weight-bold">Total Found</div>
+                <div class="h2 mb-0 font-weight-bold" id="totalCount">0</div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4 mb-3">
+            <div class="card shadow-sm p-3 bg-success text-white border-0">
+                <div class="text-white-50 small text-uppercase font-weight-bold">Quaker Named</div>
+                <div class="h2 mb-0 font-weight-bold" id="quakerCount">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Message Banner -->
+    <div id="feedback" class="alert d-none shadow-sm" role="alert"></div>
+
+    <!-- Discovered List Section -->
+    <div class="mt-4">
+        <h4 class="h5 mb-3 text-secondary">Buildings You've Found:</h4>
+        <ul id="discoveredList" class="list-group shadow-sm" style="max-height: 300px; overflow-y: auto;"></ul>
+    </div>
+</div>
+
+<!-- CollectionBuilder Footer Section Container -->
+<div class="row">
   <div class="col-md-12">
 
     {% include index/data-download.html %}
 
   </div>
-
 </div>
+
+<!-- Game Engine Logic -->
+<script>
+const campusData = [];
+
+{% if site.data.quiz-info %}
+  {% for item in site.data.quiz-info %}
+    (() => {
+      const titleStr = {{ item.title | jsonify }} || "";
+      const noteStr = {{ item.description | jsonify }} || "";
+      const isQuakerVal = "{{ item.is_quaker }}".trim().toLowerCase();
+
+      if (titleStr) {
+        campusData.push({
+          title: titleStr,
+          searchName: titleStr.toLowerCase()
+              .replace(' science and engineering library', '')
+              .replace(' science center', '')
+              .replace(' library', '')
+              .replace(' memorial', '')
+              .replace(' center', '')
+              .replace(' hall', '')
+              .replace(' house', '')
+              .trim(),
+          isQuaker: isQuakerVal === 'yes' || isQuakerVal === 'true',
+          note: noteStr
+        });
+      }
+    })();
+  {% endfor %}
+{% endif %}
+
+// Game tracking metrics
+const foundBuildings = new Set(); 
+let quakerScore = 0; 
+
+console.log("Quiz System Initialized. Total records loaded from CSV: ", campusData.length);
+
+function checkBuilding() {
+    const inputField = document.getElementById("bldgInput"); 
+    const guess = inputField.value.trim().toLowerCase(); 
+    const feedback = document.getElementById("feedback"); 
+    
+    if (!feedback || !inputField) return;
+    
+    feedback.className = "alert"; 
+    inputField.value = ""; 
+
+    if (!guess) return;
+
+    // Match criteria logic execution
+    const match = campusData.find(b => b.searchName === guess || b.title.toLowerCase() === guess);
+
+    if (!match) {
+        feedback.classList.add("alert-danger");
+        feedback.innerText = `"${guess}" wasn't found. Try again!`;
+        feedback.classList.remove("d-none");
+        return;
+    }
+
+    if (foundBuildings.has(match.title)) {
+        feedback.classList.add("alert-warning");
+        feedback.innerText = `You already found ${match.title}!`;
+        feedback.classList.remove("d-none");
+        return;
+    }
+
+    foundBuildings.add(match.title);
+    if (match.isQuaker) {
+        quakerScore++;
+        feedback.classList.add("alert-success");
+        feedback.innerText = `Correct! ${match.title} is named after a Quaker. (${match.note})`;
+    } else {
+        feedback.classList.add("alert-info");
+        feedback.innerText = `So close! ${match.title} is a valid campus building, but it is not named after a Quaker. (${match.note})`;
+    }
+    feedback.classList.remove("d-none");
+
+    updateScoreboard(match);
+}
+
+function updateScoreboard(match) {
+    const totalCountEl = document.getElementById("totalCount");
+    const quakerCountEl = document.getElementById("quakerCount");
+    const listEl = document.getElementById("discoveredList");
+
+    if (totalCountEl) totalCountEl.innerText = foundBuildings.size; 
+    if (quakerCountEl) quakerCountEl.innerText = quakerScore; 
+
+    if (listEl) {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center mb-1 py-2";
+        li.innerHTML = `<span><strong>${match.title}</strong> — ${match.note}</span>`;
+        
+        if (match.isQuaker) {
+            li.innerHTML += `<span class="badge bg-success text-white px-2 py-1">Quaker Named</span>`;
+        } else {
+            li.innerHTML += `<span class="badge bg-secondary text-white px-2 py-1">Non-Quaker</span>`;
+        }
+        listEl.appendChild(li);
+    }
+}
+
+document.getElementById("bldgInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") checkBuilding();
+});
+</script>
