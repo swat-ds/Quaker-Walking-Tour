@@ -50,6 +50,13 @@
     border-color: #8e3333 !important;
     color: #fff !important;
 }
+ // I want this button to be red when hovered over, but I want the text to be white. I also want the border to be red when hovered over.
+ .btn.btn-outline-primary,
+ .btn.btn-outline-primary:hover {
+    color: #8e3333 !important;
+    border-color: #8e3333 !important;
+    background-color: #fff !important;
+}
 
 .pagination .page-item.active .page-link {
     background-color: #8e3333;

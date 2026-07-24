@@ -30,7 +30,7 @@ permalink: /connect/
   <div style="flex: 1; min-width: 260px; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; background: #ffffff; height: fit-content; max-height: 550px; overflow-y: auto;">
     <h3 id="panel-title" style="margin-top:0;">Select an Item</h3>
     <h6 id="panel-sub" style="color: #e51e1e; margin-bottom: 10px; font-weight: normal; text-transform: uppercase; font-size: 0.8rem;"></h6>
-    <a id="panel-action-link" class="btn btn-light" href="#" style="display: none; margin-bottom: 15px;">View Item</a>
+    <a id="panel-action-link" class="btn btn-light" href="#" style="display: none; margin-bottom: 15px;">View Associated Plant</a>
 
   <!-- Container for the Pop-up Portrait -->
   <div id="panel-img-container" style="display: none; margin-bottom: 15px; text-align: center;">
@@ -212,7 +212,7 @@ const ctx = document.getElementById('network-container');
   }
 
   function resetPanel() {
-    document.getElementById('panel-title').innerText = 'Select an Item';
+    document.getElementById('panel-title').innerText = 'Click on a bubble or line!';
     document.getElementById('panel-sub').innerText = '';
     document.getElementById('panel-desc').innerText = 'Click on a person, institution, or relationship line in the web to view historical narratives, family connections, and plant ties.';
     document.getElementById('panel-img-container').style.display = 'none';
@@ -238,7 +238,7 @@ const ctx = document.getElementById('network-container');
     if (exactMatch) {
       actionLink.href = exactMatch;
       actionLink.style.display = 'inline-block';
-      actionLink.textContent = 'View Item';
+      actionLink.textContent = 'View Associated Plant';
       return;
     }
 
@@ -249,7 +249,7 @@ const ctx = document.getElementById('network-container');
     if (fuzzyMatch) {
       actionLink.href = plantItemRegistry[fuzzyMatch];
       actionLink.style.display = 'inline-block';
-      actionLink.textContent = 'View Item';
+      actionLink.textContent = 'View Associated Plant';
     } else {
       actionLink.style.display = 'none';
       actionLink.href = '#';

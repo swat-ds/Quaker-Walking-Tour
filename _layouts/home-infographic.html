@@ -25,11 +25,10 @@ layout: page
 
 </div>
 
-<!-- INTERACTIVE QUIZ SECTION -->
-<!-- Placed outside the row block to bypass CollectionBuilder style rules -->
+<!-- QUIZ SECTION -->
 <div class="container my-5 py-4 border-top" style="position: relative; z-index: 10; display: block !important;">
-    <h2 class="mb-3 h3 text-dark">Swarthmore Quaker Campus Quiz</h2>
-    <p class="lead text-muted">Type in the name of Swarthmore buildings. How many are named after Quakers?</p>
+    <h2 class="mb-3 h3 text-dark">Finished exploring the different Quakers on Campus? Why not try to guess how many Swathmore Buildings are named after Quakers?</h2>
+    <p class="lead text-muted">It's more than you might think!</p>
     
     <!-- Input Box Area -->
     <div class="input-group mb-4" style="max-width: 500px;">
@@ -106,8 +105,6 @@ const campusData = [];
 // Game tracking metrics
 const foundBuildings = new Set(); 
 let quakerScore = 0; 
-
-console.log("Quiz System Initialized. Total records loaded from CSV: ", campusData.length);
 
 function checkBuilding() {
     const inputField = document.getElementById("bldgInput"); 
