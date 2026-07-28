@@ -41,6 +41,16 @@
     /* init map */
     var map = L.map('map');
 
+    /* Plot Swarthmore campus buildings from buildingguide.csv */
+    {% assign campus_buildings = site.data.buildingguide %}
+    {% for building in campus_buildings %}
+      {% if building.latitude and building.longitude %}
+        L.marker([{{ building.latitude | strip }}, {{ building.longitude | strip }}])
+          .addTo(map)
+          .bindPopup('<h2 class="h5 font-weight-bold mb-0">{{ building.title | escape }}</h2>');
+      {% endif %}
+    {% endfor %}
+
     /* add map layer options */
     var Esri_WorldStreetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
