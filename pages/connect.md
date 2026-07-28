@@ -21,6 +21,8 @@ permalink: /connect/
 
 <p class="lead">This graph showcases the different ways the Quakers in this collection connect to each other. From friends, to brothers, to biographers. Click, drag, or zoom into the diagram to explore each different relationships and their history. Select any connection line or portrait to display their historical context and botanical records in the sidebar.</p>
 
+<button onclick="resetZoom()" class="btn btn-light" style="margin-bottom: 10px; display: inline-flex; align-items: center; gap: 5px;">🔍 Reset View</button>
+
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px;">
   <!-- Map -->
   <div style="flex: 2; min-width: 320px;">
@@ -110,7 +112,7 @@ const canvasEdges = new vis.DataSet([
 ]);
 
   // Building the network grid canvas layout
-const ctx = document.getElementById('network-container');
+  const ctx = document.getElementById('network-container');
   const chart = new vis.Network(ctx, { nodes: canvasNodes, edges: canvasEdges }, {
     nodes: { 
       size: 28, 
@@ -129,6 +131,12 @@ const ctx = document.getElementById('network-container');
         roundness: 0.3
       }
     },
+    interaction: {
+      // Prevents zooming out too far into infinity
+      zoomView: true,
+      minScale: 0.2, // Limits how small the network can get
+      maxScale: 2.5  // Optional: Limits how close you can zoom in
+    },
     groups: {
       networked: {
         color: {
@@ -141,6 +149,21 @@ const ctx = document.getElementById('network-container');
       }
     }
   });
+
+  // Automatically center and fit the network layout once it finishes drawing
+  chart.once("stabilizationIterationsDone", function () {
+    chart.fit({ animation: true });
+  });
+
+  // Function to smoothly reset the view back to the initial loading position
+  function resetZoom() {
+    chart.fit({
+      animation: {
+        duration: 1000,
+        easingFunction: 'easeInOutQuad'
+      }
+    });
+  }
 
   const plantItemRegistry = {
     {% for row in site.data.quakerroots %}
