@@ -7,7 +7,14 @@ layout: page
 
   <div class="col-md-8">
 
-    {% include index/description.html %}
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Browse</h5>
+        <p class="card-text">Explore our collection of items related to the Quakers on campus.</p>
+        <a class="btn btn-sm btn-outline-secondary mt-2" href="/Quaker-Walking-Tour/browse/">View Items</a>
+      </div>
+    </div>
+    
     {% include index/carousel.html title="Sample Items" %}
     
   </div>
@@ -16,8 +23,14 @@ layout: page
     {% include index/time.html %}
 
     {% include index/featured-terms.html field="subject" title="Top Subjects" btn-color="primary" %}
-
-    {% include index/content.html %}
+    
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="card-title">About</h5>
+        <p class="card-text">The intention behind the tour and the meaning for the Swarthmore community.</p>
+        <a class="btn btn-sm btn-outline-secondary mt-2" href="/Quaker-Walking-Tour/about/">Read More</a>
+      </div>
+    </div>
 
   </div>
 

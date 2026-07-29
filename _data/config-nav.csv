@@ -1,8 +1,8 @@
 display_name,stub,dropdown_parent
 Home,/,
+About,/about.html,
 Browse,/browse.html,
-Timeline,/timeline.html,
+Connection,connect,
 Data,/data.html,
 Map,/map.html,
-About,/about.html,
-Connect,connect
+Timeline,/timeline.html

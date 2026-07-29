@@ -76,8 +76,8 @@ const nodeRegistry = {
       imag_desc: {{ row.imag_des | jsonify }},
       imag_date: {{ row.imag_date | jsonify }},
       // Collection & Source info 
-      source_info: {{ row['Collection & Source info'] | jsonify }}
-    }{% unless forloop.last %},{% endunless %}
+      source_info: {{ row.info | jsonify }}
+      }{% unless forloop.last %},{% endunless %}
   {% endfor %}
 };
 

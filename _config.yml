@@ -20,10 +20,10 @@ source-code: https://github.com/CollectionBuilder/collectionbuilder-csv
 # title of site appears in banner
 title: Quaker Roots Walking Tour
 # tagline, a short phrase that will appear throughout the site in the top banner
-tagline: an online walking tour for plants in the Swarthmore arboretum that are connected to famous Quakers.
+tagline: The Quaker Roots collection is an online walking tour of plants in the Swarthmore Arboretum that are connected to famous Quakers.
 # description appears in meta tags and other locations
 # this description might appear in search result lists, keep around 160 characters max
-description: "Images and information for a walking tour of plants in the Swarthmore arboretum that are connected to famous Quakers."
+description: "The Quaker Roots collection is an online walking tour of plants in the Swarthmore Arboretum that are connected to famous Quakers."
 # keywords, a short list of subjects describing the collection, separated by semicolon, to appear in rich markup
 keywords: quaker; 
 # creator of the digital collection, to appear in meta tags; we typically use our GitHub usernames but feel free to just use your name
